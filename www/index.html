@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"> -->
+        <meta charset="utf-8"> 
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="dist/css/map-icons.css">
+        <title>Test Skier User Journey</title>
+        <link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css">
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+
+        <style>
+          body{background-image: url('img/ski_login.png'); background-repeat:no-repeat; background-size: cover;}
+
+          .title {
+            color: white;
+          }
+
+          #login-form h1 {
+            color: white;
+          }
+
+          .ui-content {
+            padding-top: 100px;
+            text-align: center;
+          }
+
+          input[type=submit] {
+            padding:5px 15px; 
+            background:#5D5A75;
+            color: white; 
+            border:0 none;
+            cursor:pointer;
+            -webkit-border-radius: 5px;
+            border-radius: 5px; 
+            }
+        </style>
+
+    </head>
+    <body>
+        <!-- Initial login form -->
+        <div data-role="page" data-theme="a" id="login-form">
+            <div data-role="header">
+                <h1>Welcome to SkiApp!</h1>
+            </div>
+
+            <div data-role = 'main' class="ui-content">
+                <form action="https://skipatrolproductiondatabase.herokuapp.com/skiers/login" id="login" method="post">
+                    <div>
+                        <label class="title"></label>
+                        <input type="text" id="username" name="username" placeholder="Username">
+                    </div>
+                    <br>
+                    <div>
+                        <label class="title"></label>
+                        <input type="text" id="password" name="password" placeholder="Password">
+                    </div>
+                    <br>
+                    <div>
+                        <input type="submit" id="submitButton"  name="submitButton" value="Login">
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <script>
+            $("#login").submit(function(event){
+                event.preventDefault();
+
+                var $form = $(this),
+                    url = $form.attr('action');
+
+                var posting = $.post(url, {username: $('#username').val(), password: $('#password').val() }, function() {
+                })
+
+                .done(function(data) {
+                    localStorage.setItem("user_id", data[0]);
+                    localStorage.setItem("token", data[1]);
+                    if(localStorage.getItem("token")) {
+                        window.location.href="checkin.html"; 
+                    }
+                })
+                .fail(function() {
+                    alert("Sorry, incorrect username or password");
+                })
+            });
+        </script>
+    </body>
+</html>
