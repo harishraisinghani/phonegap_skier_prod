@@ -17,28 +17,41 @@
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
         <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9ZYaH3tGSZfgnZqHkmO9b2opCiGYYSNg" async defer></script>
+
+        <style>
+          html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+          }
+          #map {
+            height: 100%;
+          }
+          #content {
+            padding: 0;
+            position :absolute;
+            top: 40px;
+            right: 0;
+            bottom: 40px;
+            left: 0;
+          }
+        </style>
 
     </head>
 
     <body>
-        <!-- Initial login form -->
-        <div data-role="page" data-theme="a" id="login-form">
-            <div data-role="header">
-                <h1>You have succesfully logged in</h1>
-            </div>
+         <div data-role = "content" id="content">
+          <div id="map"></div>
         </div>
-        
-        <!-- Start of second page -->
-        <!-- <div data-role="page" id="checkin-view">
-            <div data-role="header">
-                <h1>Checkin Now</h1>
-            </div>
 
-            <div role = 'main' class="ui-content">
-                <button>Check In</button>
-            </div>
-            <ul></ul>
-        </div> -->
-<!--         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9ZYaH3tGSZfgnZqHkmO9b2opCiGYYSNg&callback=initMap" async defer></script> -->
+        
+        <script>
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: destLatLong,
+                zoom: 13
+            });
+        </script>
+        
     </body>
 </html>
