@@ -15,43 +15,72 @@
         <link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css">
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/map.js"></script>
         <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
         <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9ZYaH3tGSZfgnZqHkmO9b2opCiGYYSNg" async defer></script>
 
         <style>
-          html, body {
+          .container {
             height: 100%;
             margin: 0;
             padding: 0;
+            background-color: #272d28;
           }
           #map {
-            height: 100%;
+            height: 65%;
           }
           #content {
             padding: 0;
-            position :absolute;
             top: 40px;
             right: 0;
             bottom: 40px;
             left: 0;
+            margin-top: 20%
           }
+
+          #request-assistance {
+            padding:5px 15px; 
+            background:#c91d12;
+            color: white; 
+            border:0 none;
+            text-align: center;
+            cursor: pointer;
+
+            }
+
+            a {
+                text-decoration: none;
+            }
+
         </style>
 
     </head>
 
     <body>
-         <div data-role = "content" id="content">
-          <div id="map"></div>
-        </div>
+    
+        <div class="container">
+            <a href="checkin.html">
+                <div data-role="header" id="request-assistance">
+                    <p>Request Ski Patrol Assistance </p>
+                </div>
+            </a>
+            
+            <div data-role = "content" id="content">
+                <div id="map"></div>
+            </div>
 
+            <div data-role="footer" id="group-members">
+                <table style="width:100%">
+                    <tr>
+                        <td id="marker"></td>
+                        <td id="firstname"></td> 
+                        <td id="lastname"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
         
-        <script>
-            var map = new google.maps.Map(document.getElementById('map'), {
-                center: destLatLong,
-                zoom: 13
-            });
-        </script>
-        
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9ZYaH3tGSZfgnZqHkmO9b2opCiGYYSNg&callback=initMap" async defer></script>   
     </body>
 </html>
