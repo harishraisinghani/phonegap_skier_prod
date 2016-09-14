@@ -37,13 +37,16 @@ function initMap() {
                 dataType:   'json',
                 url: 'https://skipatrolproductiondatabase.herokuapp.com/groups/1/skiers/current_checkin/pings/last',
                 success: function(response) {
+                    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    var labelIndex = 0;
                     for(var i = 0; i<response[0].length; i++) {
                         var groupMarker = new google.maps.Marker({
                             position: {lat: response[0][i].lat , lng: response[0][i].long},
-                            map: map,   
+                            label: labels[labelIndex++ % labels.length],
+                            map: map   
                         });
-                        
-
+                        var r = "<tr><td>"+response[1][i]+"</td></tr>";
+                        $("#group-members-name").append(r);
                     }
                 }       
             });
@@ -51,7 +54,40 @@ function initMap() {
     });
 }
 
-initMap();
+var onSuccess = function(position) {
+    var id = localStorage.getItem("user_id");
+    $.ajax({
+            method: 'GET',
+            url: 'https://skipatrolproductiondatabase.herokuapp.com/skiers/'+id+'/request_alert',
+            data: {lat: position.coords.latitude, lng: position.coords.longitude },
+            success: function(response) {
+               alert(response);
+              }
+        });
+}
+
+// onError Callback receives a PositionError object
+//
+function onError(error) {
+    alert('code: '    + error.code    + '\n' +
+          'message: ' + error.message + '\n');
+}
+
+
+
+$(function() {
+   $("#ping").on("click", function() {
+        initMap();
+    }); 
+});
+
+$(function() {
+   $("#help-me").on("click", function() { 
+        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+    }); 
+});
+
+
 
 
 
@@ -99,11 +135,6 @@ initMap();
 //     });
 // };
 
-// // onError Callback receives a PositionError object
-// //
-// function onError(error) {
-//     alert('code: '    + error.code    + '\n' +
-//           'message: ' + error.message + '\n');
-// }
+
 
 // navigator.geolocation.getCurrentPosition(onSuccess, onError);

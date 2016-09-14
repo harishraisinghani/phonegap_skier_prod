@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
-        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"> -->
         <meta charset="utf-8"> 
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+        <!-- Bootstrap - Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Bootstrap - Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Bootstrap Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 
         <link rel="stylesheet" type="text/css" href="css/index.css">
         <link rel="stylesheet" type="text/css" href="dist/css/map-icons.css">
         <title>Test Skier User Journey</title>
         <link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css">
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript" src="js/map.js"></script>
         <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
         <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/map.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
 
         <style>
           .container {
@@ -25,17 +32,21 @@
             margin: 0;
             padding: 0;
             background-color: #272d28;
+            position:relative;
           }
           #map {
             height: 65%;
           }
           #content {
+            position:relative;
             padding: 0;
+            padding-bottom: 15%;
             top: 40px;
             right: 0;
             bottom: 40px;
             left: 0;
-            margin-top: 20%
+            margin-top: 20%;
+            overflow-y: scroll;
           }
 
           #request-assistance {
@@ -45,11 +56,54 @@
             border:0 none;
             text-align: center;
             cursor: pointer;
-
             }
 
             a {
                 text-decoration: none;
+            }
+
+            td {
+                position:relative;
+                color: white;
+            }
+
+            table {
+                width: 100%;
+                position:relative;
+                bottom: 15%;
+            }
+
+            #ping-button button {
+                position:relative;
+                margin:auto;
+                color: white;
+                bottom: 20%;
+                padding:5px 15px; 
+                background:#5D5A75;
+                color: white; 
+                border:0 none;
+                cursor:pointer;
+                -webkit-border-radius: 5px;
+                border-radius: 5px; 
+                }
+
+            .redirect {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                background-color: #272d28;
+            }
+            .redirect button {
+                margin:auto;
+                padding:5px 15px; 
+                background:#ffffff;
+                border:0 none;
+                cursor:pointer;
+                -webkit-border-radius: 5px;
+                border-radius: 5px; 
+            }
+            .redirect #profile {
+                float: right;
             }
 
         </style>
@@ -59,24 +113,28 @@
     <body>
     
         <div class="container">
-            <a href="checkin.html">
                 <div data-role="header" id="request-assistance">
-                    <p>Request Ski Patrol Assistance </p>
+                    <button class="btn btn-danger" id="help-me">Request Ski Patrol Assistance </button>
                 </div>
-            </a>
             
             <div data-role = "content" id="content">
                 <div id="map"></div>
+                <div id="ping-button">
+                    <button id="ping">Ping Group</button>
+                </div>
+                <table id="group-members-name">
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
 
+
             <div data-role="footer" id="group-members">
-                <table style="width:100%">
-                    <tr>
-                        <td id="marker"></td>
-                        <td id="firstname"></td> 
-                        <td id="lastname"></td>
-                    </tr>
-                </table>
+                
+            </div>
+
+            <div class="redirect">
+                <button id="checkout" class="alignleft">Check Out </button> <button id="profile" class="alignright">View Profile</button>
             </div>
         </div>
         
