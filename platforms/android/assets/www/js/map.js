@@ -25,7 +25,6 @@ function initMap() {
                     var marker = new google.maps.Marker({
                         position: {lat: response[response.length-1].lat , lng: response[response.length-1].long},
                         map: map,
-                        animation: google.maps.Animation.DROP,
                         title: 'I am here!',
                         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
                     });
@@ -37,6 +36,7 @@ function initMap() {
                 dataType:   'json',
                 url: 'https://skipatrolproductiondatabase.herokuapp.com/groups/1/skiers/current_checkin/pings/last',
                 success: function(response) {
+                    $("#group-members-name tr").remove();
                     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
                     var labelIndex = 0;
                     for(var i = 0; i<response[0].length; i++) {
@@ -45,8 +45,8 @@ function initMap() {
                             label: labels[labelIndex++ % labels.length],
                             map: map   
                         });
-                        var r = "<tr><td>"+response[1][i]+"</td></tr>";
-                        $("#group-members-name").append(r);
+                        var row = "<tr><td>"+labels[i]+"</td><td>"+response[1][i]+"</td></tr>";
+                        $("#group-members-name").append(row);
                     }
                 }       
             });
