@@ -3,6 +3,9 @@
 // current GPS coordinates
 //
 
+var map;
+
+
 function initMap() {
   $.ajax({
         method:     'GET',
@@ -10,49 +13,69 @@ function initMap() {
         url: 'https://skipatrolproductiondatabase.herokuapp.com/destinations/4.json',
         success: function(response) {
            var destLatLong = {lat: response.lat, lng: response.long};
-            var map = new google.maps.Map(document.getElementById('map'), {
+            map = new google.maps.Map(document.getElementById('map'), {
                 center: destLatLong,
                 zoom: 13
-            });
-
-            //Get location of signed in user from database
-            var id = localStorage.getItem("user_id");
-            $.ajax({
-                method:     'GET',
-                dataType:   'json',
-                url: 'https://skipatrolproductiondatabase.herokuapp.com/skiers/'+id+'/pings',
-                success: function(response) {
-                    var marker = new google.maps.Marker({
-                        position: {lat: response[response.length-1].lat , lng: response[response.length-1].long},
-                        map: map,
-                        title: 'I am here!',
-                        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-                    });
-                }       
-            });
-
-            $.ajax({
-                method:     'GET',
-                dataType:   'json',
-                url: 'https://skipatrolproductiondatabase.herokuapp.com/groups/1/skiers/current_checkin/pings/last',
-                success: function(response) {
-                    $("#group-members-name tr").remove();
-                    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                    var labelIndex = 0;
-                    for(var i = 0; i<response[0].length; i++) {
-                        var groupMarker = new google.maps.Marker({
-                            position: {lat: response[0][i].lat , lng: response[0][i].long},
-                            label: labels[labelIndex++ % labels.length],
-                            map: map   
-                        });
-                        var row = "<tr><td>"+labels[i]+"</td><td>"+response[1][i]+"</td></tr>";
-                        $("#group-members-name").append(row);
-                    }
-                }       
             });
         }
     });
 }
+
+var myPosition = function(position) {
+    var marker = new google.maps.Marker({
+        position: {lat: position.coords.latitude , lng: position.coords.longitude},
+        map: map,
+        title: 'I am here!',
+        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+    });
+}
+
+function findMyGroup() {
+   $.ajax({
+        method: 'GET',
+        dataType: 'json',
+        url: 'https://skipatrolproductiondatabase.herokuapp.com/groups/1/skiers/current_checkin/pings/last',
+        success: function(response) {
+            $("#group-members-name tr").remove();
+            var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            var labelIndex = 0;
+            for(var i = 0; i<response[0].length; i++) {
+                var groupMarker = new google.maps.Marker({
+                    position: {lat: response[0][i].lat , lng: response[0][i].long},
+                    label: labels[labelIndex++ % labels.length],
+                    map: map   
+                });
+                var row = "<tr><td>"+labels[i]+"</td><td>"+response[1][i]+"</td></tr>";
+                $("#group-members-name").append(row);
+            }
+        }       
+    }); 
+}
+
+
+            //Get location of signed in user from database
+            // var id = localStorage.getItem("user_id");
+            
+
+
+            
+
+
+            // $.ajax({
+            //     method:     'GET',
+            //     dataType:   'json',
+            //     url: 'https://skipatrolproductiondatabase.herokuapp.com/skiers/'+id+'/pings',
+            //     success: function(response) {
+            //         var marker = new google.maps.Marker({
+            //             position: {lat: position.coords.latitude , lng: position.coords.longitude},
+            //             map: map,
+            //             title: 'I am here!',
+            //             icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+            //         });
+            //     }       
+            // });
+
+            
 
 var onSuccess = function(position) {
   var id = localStorage.getItem("user_id");
@@ -71,6 +94,8 @@ function onError(error) {
     alert('code: '    + error.code    + '\n' +
           'message: ' + error.message + '\n');
 }
+
+
 
 function checkForEmergency(last_ping_id){
   var last_ping_lat, last_ping_long, two_pings_lat, two_pings_long, two_pings_id;
@@ -180,17 +205,20 @@ function createCheckin(id){
 // });
 
 $(document).ready(function(){
+  initMap();
+  
   var uid = localStorage.user_id;
   localStorage.clear();
   localStorage.setItem("user_id", uid);
 
   createCheckin(localStorage.user_id);
-
+  
   navigator.geolocation.getCurrentPosition(setPingInterval, onError);
 
   $(function() {
     $("#ping").on("click", function() {
-      initMap();
+      navigator.geolocation.getCurrentPosition(myPosition, onError);
+      findMyGroup();
     });
   });
 
