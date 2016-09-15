@@ -39,7 +39,7 @@
           }
 
           .ui-content {
-            padding-top: 100px;
+            padding-top: 150px;
             text-align: center;
           }
 
@@ -52,14 +52,38 @@
             -webkit-border-radius: 5px;
             border-radius: 5px; 
             }
+
+            .navbar{
+                background-color: #272D28;
+            }
+
+            .logo p {
+                padding-top: 10px;
+                font-family: "Menlo-Regular";
+                font-size: 22px;
+                color: #66D9EF;
+                text-transform: none;
+                text-align: center;
+                }
+
+            #arg {
+              color: #FD971F;
+              font-family: "Menlo-Regular";
+              font-size: 22px;
+              font-style: italic;
+
         </style>
 
     </head>
     <body>
         <!-- Initial login form -->
         <div data-role="page" data-theme="a" id="login-form">
-            <div data-role="header">
-                <h1>Welcome to SkiApp!</h1>
+            <div class="navbar navbar-fixed-top">
+              <div class="container">
+                <div class="header logo"> 
+                  <p>snowBlind(<span id="arg">skier</span>)</p>
+                </div>
+              </div>
             </div>
 
             <div data-role = 'main' class="ui-content">
