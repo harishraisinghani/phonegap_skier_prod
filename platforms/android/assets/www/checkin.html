@@ -67,22 +67,31 @@
                 border:0 none;
                 text-align: center;
             }
+
+            .logout-container {
+              background-color: #272d28;
+              margin-top: -50px;
+            }
+
+
         </style>
 
     </head>
 
     <body>
         <div class="container">
-         <div class="round-button">
-            <div class="round-button-circle">
-                <a href="main.html" class="round-button"><h1>Check In</h1></a>
-            </div>
+           <div class="round-button">
+              <div class="round-button-circle">
+                  <a href="main.html" class="round-button"><h1>Check In</h1></a>
+              </div>
+          </div>
+          <div id="checkin-warning-content">
+              <p>By checking in you will be able to request Ski Patrol assistance in case of emergency.</p>
+              <p>Please do not abuse this service.</p>
+          </div>
         </div>
-        <div id="checkin-warning-content">
-            <p>By checking in you will be able to request Ski Patrol assistance in case of emergency.</p>
-            <p>Please do not abuse this service.</p>
-        </div> 
+        <div class="logout-container">
+          <a href="index.html"><button class="btn btn-secondary pull-right">Logout</button></a>
         </div>
-        
     </body>
 </html>
