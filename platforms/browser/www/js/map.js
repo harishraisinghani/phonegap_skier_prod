@@ -4,7 +4,7 @@
 //
 
 function initMap() {
-    $.ajax({
+  $.ajax({
         method:     'GET',
         dataType:   'json',
         url: 'https://skipatrolproductiondatabase.herokuapp.com/destinations/4.json',
@@ -55,37 +55,153 @@ function initMap() {
 }
 
 var onSuccess = function(position) {
-    var id = localStorage.getItem("user_id");
-    $.ajax({
-            method: 'GET',
-            url: 'https://skipatrolproductiondatabase.herokuapp.com/skiers/'+id+'/request_alert',
-            data: {lat: position.coords.latitude, lng: position.coords.longitude },
-            success: function(response) {
-               alert(response);
-              }
-        });
+  var id = localStorage.getItem("user_id");
+  $.ajax({
+    method: 'GET',
+    url: 'https://skipatrolproductiondatabase.herokuapp.com/skiers/'+id+'/request_alert',
+    data: {lat: position.coords.latitude, lng: position.coords.longitude },
+    success: function(response) {
+      alert(response);
+    }
+  });
 }
 
 // onError Callback receives a PositionError object
-//
 function onError(error) {
     alert('code: '    + error.code    + '\n' +
           'message: ' + error.message + '\n');
 }
 
+function checkForEmergency(last_ping_id){
+  var last_ping_lat, last_ping_long, two_pings_lat, two_pings_long, two_pings_id;
+  var lat_diff, long_diff;
+  var tolerance = 0.0001;
+  two_pings_id = last_ping_id - 1;
+  two_pings_lat = localStorage["lat" + two_pings_id];
+  two_pings_long = localStorage["long" + two_pings_id];
+  last_ping_lat = localStorage["lat" + last_ping_id];
+  last_ping_long = localStorage["long" + last_ping_id];
+  
+  lat_diff = Math.abs(two_pings_lat - last_ping_lat);
+  long_diff = Math.abs(two_pings_long - last_ping_long);
+  
+  if (lat_diff < tolerance && long_diff < tolerance){
+    if (window.confirm("You have been detected as immobile.\nDo you need help?")){
+      $.post('https://skipatrolproductiondatabase.herokuapp.com/alerts.json', 
+        {alert: {ping_id: last_ping_id}},
+        function(){
+        })
+      .done(function(data){
+        alert('Ski Patrol has been alerted');
+      })
+      .fail(function(){
+        alert('post fail');
+      })
+    }
+  }
+}
 
+function intervalPing(position){
+  var cell_ping = {
+  lat: position.coords.latitude,
+  long: position.coords.longitude,
+  checkin_id: localStorage.checkin_id
+  }
 
-$(function() {
-   $("#ping").on("click", function() {
-        initMap();
-    }); 
+  $.ajax({
+    method: 'POST',
+    dataType: 'json',
+    data: {
+      ping: cell_ping
+    },
+    url: 'https://skipatrolproductiondatabase.herokuapp.com/pings.json',
+    success: function(ping) {
+      var ping_lat, ping_long, ping_lat_key, ping_long_key
+      ping_lat_key = "lat" + ping.id;
+      ping_long_key = "long" + ping.id;
+      ping_lat = ping.lat.toString();
+      ping_long = ping.long.toString();
+      localStorage.setItem("ping_id", ping.id);
+      localStorage.setItem(ping_lat_key, ping_lat);
+      localStorage.setItem(ping_long_key, ping_long);
+      checkForEmergency(ping.id);
+    },
+    error: function(e){
+      alert(e);
+    }
+  });
+}
+
+function setPingInterval(position){
+    var intervalID = window.setInterval(function(){intervalPing(position)}, 5000); //delay in milliseconds
+}
+
+function createCheckin(id){
+  var new_checkin = {
+    destination_id: 4,
+    skier_id: id, 
+  }
+
+  $.ajax({
+    method: 'POST',
+    dataType: 'json',
+    data: {
+      checkin: new_checkin
+    },
+    url: 'https://skipatrolproductiondatabase.herokuapp.com/checkins.json',
+    success: function(checkin) {
+      localStorage.setItem("checkin_id", checkin.id);
+    }
+  });
+}
+
+// $('.checkin_ping').on('click', function() {
+//   var cell_ping = {
+//     // DONT FORGET TO UPDATE WITH GEOLOCATOR VARIABLES
+//     lat: 77.0,
+//     long: 67.0,
+//     // Skier.find(session[:id]).current_checkin_id
+//     checkin_id: 10 
+//   }  
+//   $.ajax({
+//     method: 'POST',
+//     dataType: 'json',
+//     data: {
+//       ping: cell_ping
+//     },
+//     url: '/pings',
+//     success: function(ping) {
+//       console.log(ping)
+//     },
+//     error: function(e){
+//       console.log(e)
+//     }
+//   })
+// });
+
+$(document).ready(function(){
+  var uid = localStorage.user_id;
+  localStorage.clear();
+  localStorage.setItem("user_id", uid);
+
+  createCheckin(localStorage.user_id);
+
+  navigator.geolocation.getCurrentPosition(setPingInterval, onError);
+
+  $(function() {
+    $("#ping").on("click", function() {
+      initMap();
+    });
+  });
+
+  $(function() {
+    $("#help-me").on("click", function() {
+      navigator.geolocation.getCurrentPosition(onSuccess, onError);
+    });
+  });
+
 });
 
-$(function() {
-   $("#help-me").on("click", function() { 
-        navigator.geolocation.getCurrentPosition(onSuccess, onError);
-    }); 
-});
 
 
 

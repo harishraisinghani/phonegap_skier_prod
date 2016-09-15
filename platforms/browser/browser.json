@@ -15,35 +15,13 @@
         },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
-        },
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
     "dependent_plugins": {},
-    "modules": [
-        {
-            "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
-            "id": "cordova-plugin-inappbrowser.inappbrowser",
-            "pluginId": "cordova-plugin-inappbrowser",
-            "clobbers": [
-                "cordova.InAppBrowser.open",
-                "window.open"
-            ]
-        },
-        {
-            "file": "plugins/cordova-plugin-inappbrowser/src/browser/InAppBrowserProxy.js",
-            "id": "cordova-plugin-inappbrowser.InAppBrowserProxy",
-            "pluginId": "cordova-plugin-inappbrowser",
-            "merges": [
-                ""
-            ]
-        }
-    ],
+    "modules": [],
     "plugin_metadata": {
         "cordova-plugin-compat": "1.0.0",
         "cordova-plugin-geolocation": "2.2.0",
-        "cordova-plugin-whitelist": "1.2.2",
-        "cordova-plugin-inappbrowser": "1.4.0"
+        "cordova-plugin-whitelist": "1.2.2"
     }
 }
